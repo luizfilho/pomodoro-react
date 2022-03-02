@@ -1,0 +1,32 @@
+import { styled } from "~/styles/theme";
+import { Input } from "~/components/Input/styles";
+export const Title = styled.h1`
+  margin: 0px;
+  color: ${(props) => props.theme.colors.white};
+`;
+
+export const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  margin: auto;
+  height: 100%;
+`;
+
+export const ContainerTabs = styled.div`
+  margin: 16px 0px;
+`;
+
+export const ContainerControls = styled.div`
+  display: flex;
+  align-items:center;
+  gap:8px;
+  margin:8px 0px;
+
+  svg {
+    cursor:pointer;
+    fill:${props => props.theme.colors.purple.purple100}
+  }
+`;
