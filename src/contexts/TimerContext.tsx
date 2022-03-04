@@ -16,6 +16,7 @@ interface TimerContextProps {
   handleTimer: () => void;
   handleSecondsLeft: () => void;
   increaseSeconds: () => void;
+  handleMode: (newMode: Mode) => void
   isPaused: boolean;
   isPausedRef: boolean;
   mode: Mode;
@@ -48,9 +49,6 @@ export const TimerContextProvider = ({ children }: Props) => {
       ? pomodoroConfig.pomodoroMinutes
       : pomodoroConfig.shortBreakMinutes;
   }, [pomodoroConfig, mode]);
-  console.log("currentMinutes", minutes);
-
-  // const [minutes] = useState(currentMinutes);
 
   useEffect(() => {
     if (isPausedRef.current) {
@@ -64,7 +62,8 @@ export const TimerContextProvider = ({ children }: Props) => {
 
   useEffect(() => {
     handleSecondsLeft();
-  }, []);
+  }, [mode]);
+
 
   const increaseSeconds = () => {
     if (!secondsLeftRef.current) {
@@ -83,13 +82,18 @@ export const TimerContextProvider = ({ children }: Props) => {
 
   const handleCurrentModeTimer = () => {
     if (mode === Mode.POMODORO) {
-      setMode(Mode.BREAK);
+      handleMode(Mode.BREAK);
       sounds.pomodoro.play();
     } else {
-      setMode(Mode.POMODORO);
+      handleMode(Mode.POMODORO);
       sounds.shortBreak.play();
     }
     handleSecondsLeft();
+  };
+
+  const handleMode = (newMode: Mode) => {
+    console.log('handle Mode', newMode)
+    setMode(newMode as Mode);
   };
 
   const handleSecondsLeft = () => {
@@ -108,7 +112,6 @@ export const TimerContextProvider = ({ children }: Props) => {
 
   const initConfig = () => {
     const currentConfig = localStorage.getItem("pomodoroConfig");
-    console.log("currentConfig", currentConfig);
 
     if (isEmptyObj(currentConfig)) {
       localStorage.setItem("pomodoroConfig", {
@@ -132,6 +135,7 @@ export const TimerContextProvider = ({ children }: Props) => {
         handleSecondsLeft,
         increaseSeconds,
         mode,
+        handleMode
       }}
     >
       {children}

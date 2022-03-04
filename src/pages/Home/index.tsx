@@ -17,7 +17,7 @@ const Home = () => {
   const handleSettings = () => {
     setShowSettings(!showSettings);
   };
-  const { minutes, seconds, handleTimer, isPaused, mode } = useTimerContext();
+  const { minutes, seconds, handleTimer, isPaused, mode, handleMode } = useTimerContext();
 
   const timeFormated = ` ${String(minutes).padStart(2, "0")}:${String(
     seconds
@@ -25,12 +25,6 @@ const Home = () => {
 
   const buttonLabel = useMemo(() => (isPaused ? "Start" : "Pause"), [isPaused]);
   const currentMode = useMemo(() => (mode === Mode.POMODORO ? 0 : 1), [mode]);
-  const size = {
-    width: "100%",
-    height: 300,
-  };
-  const view = "list"; // or 'coverart'
-  const theme = "black"; // or 'white'
 
   console.log("currentMode", currentMode);
 
@@ -47,10 +41,11 @@ const Home = () => {
             <S.ContainerTabs>
               <Tabs
                 tabs={[
-                  { label: "Pomodoro", component: null },
-                  { label: "Short Break", component: null },
+                  { label: "Pomodoro", component: null, value: Mode.POMODORO },
+                  { label: "Short Break", component: null, value: Mode.BREAK },
                 ]}
                 initialTabIndex={currentMode}
+                onChangeTab={handleMode}
               />
             </S.ContainerTabs>
             <Timer

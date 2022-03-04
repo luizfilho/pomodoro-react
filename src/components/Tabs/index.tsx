@@ -5,11 +5,13 @@ interface Props {
   tabs: {
     component: React.ReactNode | null;
     label: string;
+    value?: any;
   }[];
   initialTabIndex?: number;
+  onChangeTab: (value: any) => void;
 }
 
-const Tabs = ({ tabs, initialTabIndex = 0 }: Props) => {
+const Tabs = ({ tabs, initialTabIndex = 0, onChangeTab }: Props) => {
   const [currentTabIndex, setCurrentTabIndex] =
     useState<number>(initialTabIndex);
   const currentComponent = useMemo(
@@ -27,11 +29,14 @@ const Tabs = ({ tabs, initialTabIndex = 0 }: Props) => {
   return (
     <S.Container>
       <S.TabsContainer>
-        {tabs.map(({ label }, index) => (
+        {tabs.map(({ label, value }, index) => (
           <S.Tab
             key={index}
             currentTab={index === currentTabIndex}
-            onClick={() => handleCurrentTabIndex(index)}
+            onClick={() => {
+              handleCurrentTabIndex(index);
+              onChangeTab && onChangeTab(value);
+            }}
           >
             <S.TabLabel>{label}</S.TabLabel>
           </S.Tab>
