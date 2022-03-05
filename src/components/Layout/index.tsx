@@ -1,6 +1,18 @@
 import { styled } from "~/styles/theme";
 
-export const ContainerPage = styled.div`
+interface Props {
+  backgroundColor?: string;
+}
+
+export const ContainerPage = styled.div<Props>`
   height: 100vh;
-  background-color: ${(props) => props.theme.colors.gray.gray100};
+  background-color: ${({
+    backgroundColor,
+    theme: {
+      colors: {
+        gray: { gray100 },
+      },
+    },
+  }) => backgroundColor || gray100};
+  transition: 0.5s all;
 `;

@@ -22,6 +22,11 @@ export const InputContainer = styled.div`
 export const ControlsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+
+  ${Button}{
+    min-width:auto;
+    margin:16px 0px;
+  }
 `;
 
 export const ContainerSettings = styled.div`

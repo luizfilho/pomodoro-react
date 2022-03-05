@@ -41,7 +41,7 @@ const Settings = ({ onBack }: Props) => {
         <S.Title>Settings</S.Title>
         <S.InputContainer>
           <Input
-            placeholder="Pomodoro"
+            placeholder="Ex: 25"
             type="number"
             label="Pomodoro"
             id="pomodoroMinutes"
@@ -49,7 +49,7 @@ const Settings = ({ onBack }: Props) => {
             value={settings.pomodoroMinutes}
           />
           <Input
-            placeholder="Shortbreak"
+            placeholder="Ex: 5"
             type="number"
             label="Shortbreak"
             id="shortBreakMinutes"

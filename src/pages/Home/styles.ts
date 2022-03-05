@@ -21,12 +21,21 @@ export const ContainerTabs = styled.div`
 
 export const ContainerControls = styled.div`
   display: flex;
-  align-items:center;
-  gap:8px;
-  margin:8px 0px;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0px;
 
   svg {
-    cursor:pointer;
-    fill:${props => props.theme.colors.purple.purple100}
+    cursor: pointer;
+    fill: ${(props) => props.theme.colors.purple.purple100};
   }
+`;
+
+export const TitlePage = styled.h1`
+  margin: 8px;
+`;
+export const TextMode = styled.h2`
+  margin: 8px;
+  font-size: 16px;
+  font-weight: normal;
 `;

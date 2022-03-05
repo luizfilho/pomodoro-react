@@ -7,8 +7,7 @@ import Timer from "~/components/Timer";
 import Settings from "./components/Settings";
 import Tabs from "~/components/Tabs";
 import Button from "~/components/Button";
-import { useLocalStorage } from "~/hooks/useLocalStorage";
-
+import {theme} from '~/styles/theme'
 import { useTimerContext, Mode } from "~/contexts/TimerContext";
 import * as S from "./styles";
 
@@ -29,13 +28,20 @@ const Home = () => {
   const buttonLabel = useMemo(() => (isPaused ? "Start" : "Pause"), [isPaused]);
   const currentMode = useMemo(() => (mode === Mode.POMODORO ? 0 : 1), [mode]);
 
-
+  const textMode = useMemo(
+    () => (mode === Mode.POMODORO ? "time to focus!" : "time for a break!"),
+    [mode]
+  );
+  const colorMode = useMemo(() => 
+    mode === Mode.POMODORO ? theme.colors.pomodoroMode.focus : theme.colors.pomodoroMode.break
+  ,[mode])
   return (
-    <ContainerPage>
+    <ContainerPage backgroundColor={colorMode}>
       <Helmet>
         <title>{timeFormated} - Pomodoro</title>
       </Helmet>{" "}
       <S.Container>
+        <S.TitlePage>pomo-doro</S.TitlePage>
         {showSettings ? (
           <Settings onBack={handleSettings} />
         ) : (
@@ -56,6 +62,8 @@ const Home = () => {
                 seconds,
               }}
             />
+        <S.TextMode>{textMode}</S.TextMode>
+
             <S.ContainerControls>
               <Button label={buttonLabel} onClick={handleTimer} />
               <IoSettingsSharp size={32} onClick={() => handleSettings()} />

@@ -7,8 +7,8 @@ export const Button = styled.button`
   min-height: 50px;
   outline: none;
   text-transform: uppercase;
-  background-color: ${(props) => props.theme.colors.purple.purple300};
-  border: none;
+  background-color: transparent;
+  border: ${({theme}) => `2px solid ${theme.colors.white}`};
   color: ${(props) => props.theme.colors.white};
   font-size: 24px;
   border-radius: 4px;
