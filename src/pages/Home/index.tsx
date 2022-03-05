@@ -7,6 +7,7 @@ import Timer from "~/components/Timer";
 import Settings from "./components/Settings";
 import Tabs from "~/components/Tabs";
 import Button from "~/components/Button";
+import { useLocalStorage } from "~/hooks/useLocalStorage";
 
 import { useTimerContext, Mode } from "~/contexts/TimerContext";
 import * as S from "./styles";
@@ -17,7 +18,9 @@ const Home = () => {
   const handleSettings = () => {
     setShowSettings(!showSettings);
   };
-  const { minutes, seconds, handleTimer, isPaused, mode, handleMode } = useTimerContext();
+
+  const { minutes, seconds, handleTimer, isPaused, mode, handleMode } =
+    useTimerContext();
 
   const timeFormated = ` ${String(minutes).padStart(2, "0")}:${String(
     seconds
@@ -26,7 +29,6 @@ const Home = () => {
   const buttonLabel = useMemo(() => (isPaused ? "Start" : "Pause"), [isPaused]);
   const currentMode = useMemo(() => (mode === Mode.POMODORO ? 0 : 1), [mode]);
 
-  console.log("currentMode", currentMode);
 
   return (
     <ContainerPage>
@@ -35,7 +37,7 @@ const Home = () => {
       </Helmet>{" "}
       <S.Container>
         {showSettings ? (
-          <Settings handleBackButton={handleSettings} />
+          <Settings onBack={handleSettings} />
         ) : (
           <>
             <S.ContainerTabs>

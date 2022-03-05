@@ -9,17 +9,21 @@ export enum Mode {
   BREAK = "BREAK",
 }
 
+interface Props {
+  children: any;
+}
 interface TimerContextProps {
   minutes: number;
   seconds: number;
   modeTimer: ModeTimer;
   handleTimer: () => void;
-  handleSecondsLeft: () => void;
   increaseSeconds: () => void;
-  handleMode: (newMode: Mode) => void
+  handleMode: (newMode: Mode) => void;
+  handlePomodoroConfig: (values: PomodoroConfig) => void;
   isPaused: boolean;
   isPausedRef: boolean;
   mode: Mode;
+  pomodoroConfig: PomodoroConfig;
 }
 
 const INITIAL_SHORT_BREAK_MINUTES = 1;
@@ -31,24 +35,36 @@ interface PomodoroConfig {
   pomodoroMinutes: number;
   shortBreakMinutes: number;
 }
-interface Props {
-  children: any;
-}
 
 export const TimerContextProvider = ({ children }: Props) => {
-  const localStorage = useLocalStorage();
-  const pomodoroConfig: PomodoroConfig = localStorage.getItem("pomodoroConfig");
   const [isPaused, setIsPaused] = useState(true);
   const isPausedRef = useRef(isPaused);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const secondsLeftRef = useRef(secondsLeft);
   const [modeTimer, setModetimer] = useState<ModeTimer>("PLAY");
   const [mode, setMode] = useState<Mode>(Mode.POMODORO);
+  const [pomodoroConfig, setPomodoroConfig] = useLocalStorage<PomodoroConfig>(
+    "pomodoroConfig",
+    {
+      pomodoroMinutes: 10,
+      shortBreakMinutes: 20,
+    }
+  );
+
+  // const { pomodoroMinutes, shortBreakMinutes } = pomodoroConfig;
   const minutes = useMemo(() => {
-    return mode === Mode.POMODORO
-      ? pomodoroConfig.pomodoroMinutes
-      : pomodoroConfig.shortBreakMinutes;
-  }, [pomodoroConfig, mode]);
+    if (mode === Mode.POMODORO) {
+      return pomodoroConfig.pomodoroMinutes;
+    } else {
+      return pomodoroConfig.shortBreakMinutes;
+    }
+  }, [pomodoroConfig.pomodoroMinutes, pomodoroConfig.shortBreakMinutes, mode]);
+
+  // const minutes = useMemo(() => {
+  //   return mode === Mode.POMODORO
+  //     ?
+  //     : pomodoroConfig.shortBreakMinutes;
+  // }, [pomodoroConfig, mode]);
 
   useEffect(() => {
     if (isPausedRef.current) {
@@ -63,7 +79,6 @@ export const TimerContextProvider = ({ children }: Props) => {
   useEffect(() => {
     handleSecondsLeft();
   }, [mode]);
-
 
   const increaseSeconds = () => {
     if (!secondsLeftRef.current) {
@@ -92,12 +107,12 @@ export const TimerContextProvider = ({ children }: Props) => {
   };
 
   const handleMode = (newMode: Mode) => {
-    console.log('handle Mode', newMode)
     setMode(newMode as Mode);
   };
 
-  const handleSecondsLeft = () => {
-    secondsLeftRef.current = minutes * 60;
+  const handleSecondsLeft = (customMinutes?: number) => {
+    const newSecondsleft = customMinutes ? customMinutes : minutes
+    secondsLeftRef.current = newSecondsleft * 60;
     setSecondsLeft(secondsLeftRef.current);
   };
 
@@ -111,18 +126,28 @@ export const TimerContextProvider = ({ children }: Props) => {
   }, []);
 
   const initConfig = () => {
-    const currentConfig = localStorage.getItem("pomodoroConfig");
-
-    if (isEmptyObj(currentConfig)) {
-      localStorage.setItem("pomodoroConfig", {
+    if (isEmptyObj(pomodoroConfig)) {
+      setPomodoroConfig({
         pomodoroMinutes: INITIAL_POMODORO_MINUTES,
         shortBreakMinutes: INITIAL_SHORT_BREAK_MINUTES,
       });
     }
   };
+
+  const handlePomodoroConfig = (values: PomodoroConfig) => {
+    const { pomodoroMinutes, shortBreakMinutes } = values;
+    setPomodoroConfig({
+      pomodoroMinutes,
+      shortBreakMinutes,
+    });
+    if (mode === Mode.POMODORO) {
+      handleSecondsLeft(pomodoroMinutes);
+    } else {
+      handleSecondsLeft(shortBreakMinutes);
+    }
+  };
   const minutesConverted = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
-
   return (
     <TimerContext.Provider
       value={{
@@ -132,10 +157,11 @@ export const TimerContextProvider = ({ children }: Props) => {
         handleTimer,
         isPaused,
         isPausedRef: isPausedRef.current,
-        handleSecondsLeft,
         increaseSeconds,
         mode,
-        handleMode
+        handleMode,
+        pomodoroConfig,
+        handlePomodoroConfig,
       }}
     >
       {children}
