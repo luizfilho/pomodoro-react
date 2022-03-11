@@ -1,15 +1,6 @@
 import baseStyled, { ThemedStyledInterface } from "styled-components";
 export const theme = {
   colors: {
-    purple: {
-      // purple100: "#8396df",
-      purple100: "#FDF8E2",
-
-      purple200: "#5454c2",
-      purple300: "#4747b1",
-      purple400: "#282fa9",
-      purple500: "#100f5b",
-    },
     black: {
       main: "#05050e",
     },

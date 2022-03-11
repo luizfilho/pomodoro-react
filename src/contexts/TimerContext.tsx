@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useState, useEffect, useContext, createContext, useRef } from "react";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
-import { ModeTimer } from "~/components/Controls/PlayPause";
+import { useAlert } from "~/hooks/useAlert";
 import isEmptyObj from "~/utils/isEmptyObj";
 
 export enum Mode {
@@ -15,7 +15,6 @@ interface Props {
 interface TimerContextProps {
   minutes: number;
   seconds: number;
-  modeTimer: ModeTimer;
   handleTimer: () => void;
   increaseSeconds: () => void;
   handleMode: (newMode: Mode) => void;
@@ -36,12 +35,17 @@ interface PomodoroConfig {
   shortBreakMinutes: number;
 }
 
+const sounds = {
+  pomodoro: new Audio("assets/sounds/pomodoro-end.wav"),
+  shortBreak: new Audio("assets/sounds/shortbreak-end.wav"),
+};
+
 export const TimerContextProvider = ({ children }: Props) => {
+  const { createAlertConfirm } = useAlert();
   const [isPaused, setIsPaused] = useState(true);
   const isPausedRef = useRef(isPaused);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const secondsLeftRef = useRef(secondsLeft);
-  const [modeTimer, setModetimer] = useState<ModeTimer>("PLAY");
   const [mode, setMode] = useState<Mode>(Mode.POMODORO);
   const [pomodoroConfig, setPomodoroConfig] = useLocalStorage<PomodoroConfig>(
     "pomodoroConfig",
@@ -50,8 +54,6 @@ export const TimerContextProvider = ({ children }: Props) => {
       shortBreakMinutes: 20,
     }
   );
-
-  // const { pomodoroMinutes, shortBreakMinutes } = pomodoroConfig;
   const minutes = useMemo(() => {
     if (mode === Mode.POMODORO) {
       return pomodoroConfig.pomodoroMinutes;
@@ -59,26 +61,6 @@ export const TimerContextProvider = ({ children }: Props) => {
       return pomodoroConfig.shortBreakMinutes;
     }
   }, [pomodoroConfig.pomodoroMinutes, pomodoroConfig.shortBreakMinutes, mode]);
-
-  // const minutes = useMemo(() => {
-  //   return mode === Mode.POMODORO
-  //     ?
-  //     : pomodoroConfig.shortBreakMinutes;
-  // }, [pomodoroConfig, mode]);
-
-  useEffect(() => {
-    if (isPausedRef.current) {
-      return;
-    } else {
-      setTimeout(() => {
-        increaseSeconds();
-      }, 100);
-    }
-  }, [isPausedRef.current, isPausedRef, secondsLeft]);
-
-  useEffect(() => {
-    handleSecondsLeft();
-  }, [mode]);
 
   const increaseSeconds = () => {
     if (!secondsLeftRef.current) {
@@ -88,13 +70,6 @@ export const TimerContextProvider = ({ children }: Props) => {
     setSecondsLeft(secondsLeftRef.current);
   };
 
-  const sounds = useMemo(() => {
-    return {
-      pomodoro: new Audio("assets/sounds/pomodoro-end.wav"),
-      shortBreak: new Audio("assets/sounds/shortbreak-end.wav"),
-    };
-  }, []);
-
   const handleCurrentModeTimer = () => {
     if (mode === Mode.POMODORO) {
       handleMode(Mode.BREAK);
@@ -103,15 +78,30 @@ export const TimerContextProvider = ({ children }: Props) => {
       handleMode(Mode.POMODORO);
       sounds.shortBreak.play();
     }
-    handleSecondsLeft();
   };
 
   const handleMode = (newMode: Mode) => {
-    setMode(newMode as Mode);
+    const newMinutes =
+      newMode === Mode.POMODORO
+        ? pomodoroConfig.pomodoroMinutes
+        : pomodoroConfig.shortBreakMinutes;
+    if (secondsLeft < minutes * 60 && secondsLeft > 0) {
+      createAlertConfirm({
+        title: "The timer is still running, are you sure you want to switch?",
+        onConfirm: () => {
+          setMode(newMode as Mode);
+          handleTimer();
+          handleSecondsLeft(newMinutes);
+        },
+      });
+    } else {
+      handleSecondsLeft(newMinutes);
+      setMode(newMode as Mode);
+    }
   };
 
   const handleSecondsLeft = (customMinutes?: number) => {
-    const newSecondsleft = customMinutes ? customMinutes : minutes
+    const newSecondsleft = customMinutes ? customMinutes : minutes;
     secondsLeftRef.current = newSecondsleft * 60;
     setSecondsLeft(secondsLeftRef.current);
   };
@@ -121,9 +111,7 @@ export const TimerContextProvider = ({ children }: Props) => {
     setIsPaused(!isPaused);
   };
 
-  useEffect(() => {
-    initConfig();
-  }, []);
+  console.log("isPaused", isPaused);
 
   const initConfig = () => {
     if (isEmptyObj(pomodoroConfig)) {
@@ -146,14 +134,37 @@ export const TimerContextProvider = ({ children }: Props) => {
       handleSecondsLeft(shortBreakMinutes);
     }
   };
+
+  useEffect(() => {
+    initConfig();
+  }, []);
+
+  useEffect(() => {
+    handleSecondsLeft();
+  }, []);
+
+  useEffect(() => {
+    if (isPausedRef.current) {
+      return;
+    } else {
+      const timeoutId = setTimeout(() => {
+        increaseSeconds();
+      }, 100);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [isPausedRef.current, secondsLeftRef.current]);
+
   const minutesConverted = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
+
   return (
     <TimerContext.Provider
       value={{
         minutes: minutesConverted,
         seconds,
-        modeTimer,
         handleTimer,
         isPaused,
         isPausedRef: isPausedRef.current,

@@ -7,7 +7,7 @@ import Timer from "~/components/Timer";
 import Settings from "./components/Settings";
 import Tabs from "~/components/Tabs";
 import Button from "~/components/Button";
-import {theme} from '~/styles/theme'
+import { theme } from "~/styles/theme";
 import { useTimerContext, Mode } from "~/contexts/TimerContext";
 import * as S from "./styles";
 
@@ -32,9 +32,13 @@ const Home = () => {
     () => (mode === Mode.POMODORO ? "time to focus!" : "time for a break!"),
     [mode]
   );
-  const colorMode = useMemo(() => 
-    mode === Mode.POMODORO ? theme.colors.pomodoroMode.focus : theme.colors.pomodoroMode.break
-  ,[mode])
+  const colorMode = useMemo(
+    () =>
+      mode === Mode.POMODORO
+        ? theme.colors.pomodoroMode.focus
+        : theme.colors.pomodoroMode.break,
+    [mode]
+  );
   return (
     <ContainerPage backgroundColor={colorMode}>
       <Helmet>
@@ -62,7 +66,7 @@ const Home = () => {
                 seconds,
               }}
             />
-        <S.TextMode>{textMode}</S.TextMode>
+            <S.TextMode>{textMode}</S.TextMode>
 
             <S.ContainerControls>
               <Button label={buttonLabel} onClick={handleTimer} />

@@ -18,9 +18,12 @@ export const Input = styled.input`
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 `;
 
-export const Label = styled.span`
-  margin-left: 8px;
+export const Label = styled.span``;
+
+export const ErrorInput = styled.span`
+  font-size: 12px;
+  font-weight: bold;
 `;

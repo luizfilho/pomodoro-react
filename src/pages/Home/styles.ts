@@ -1,5 +1,5 @@
 import { styled } from "~/styles/theme";
-import { Input } from "~/components/Input/styles";
+
 export const Title = styled.h1`
   margin: 0px;
   color: ${(props) => props.theme.colors.white};
@@ -25,10 +25,7 @@ export const ContainerControls = styled.div`
   gap: 8px;
   margin: 8px 0px;
 
-  svg {
-    cursor: pointer;
-    fill: ${(props) => props.theme.colors.purple.purple100};
-  }
+  
 `;
 
 export const TitlePage = styled.h1`
