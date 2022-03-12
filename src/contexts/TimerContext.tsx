@@ -88,7 +88,7 @@ export const TimerContextProvider = ({ children }: Props) => {
     }
   };
 
-  const handleMode = (newMode: Mode, setNewMinutes?: true) => {
+  const handleMode = (newMode: Mode) => {
     const newMinutes =
       newMode === Mode.POMODORO
         ? pomodoroConfig.pomodoroMinutes
