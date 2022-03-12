@@ -59,7 +59,6 @@ export const TimerContextProvider = ({ children }: Props) => {
       autoStartBreaks: INITIAL_AUTO_START_BREAKS,
     }
   );
-  console.log("pomodoroConfig", pomodoroConfig);
   const minutes = useMemo(() => {
     if (mode === Mode.POMODORO) {
       return pomodoroConfig.pomodoroMinutes;
