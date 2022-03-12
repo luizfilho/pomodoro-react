@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
+import Switch from "react-switch";
 import Input from "~/components/Input";
 import Button from "~/components/Button";
 import BackButton from "~/components/BackButton";
-import { useTimerContext } from "~/contexts/TimerContext";
+import { useTimerContext, PomodoroConfig } from "~/contexts/TimerContext";
 
 import * as S from "./styles";
 
@@ -17,18 +18,23 @@ interface Errors {
 
 const Settings = ({ onBack }: Props) => {
   const {
-    pomodoroConfig: { pomodoroMinutes, shortBreakMinutes },
+    pomodoroConfig: {
+      pomodoroMinutes,
+      shortBreakMinutes,
+      autoStartPomodoro,
+      autoStartBreaks,
+    },
     handlePomodoroConfig,
   } = useTimerContext();
-  const [settings, setSettings] = useState({
-    pomodoroMinutes: pomodoroMinutes,
-    shortBreakMinutes: shortBreakMinutes,
+  const [settings, setSettings] = useState<PomodoroConfig>({
+    pomodoroMinutes,
+    shortBreakMinutes,
+    autoStartPomodoro,
+    autoStartBreaks,
   });
 
   const handleSettingsValues = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
-
-    console.log("value", value);
 
     setSettings({
       ...settings,
@@ -36,11 +42,28 @@ const Settings = ({ onBack }: Props) => {
     });
   };
 
+  const handleAutoStart = (
+    value: boolean,
+    type: "autoStartPomodoro" | "autoStartBreaks"
+  ) => {
+    console.log("value", value);
+    console.log("type", typeof type);
+
+    setSettings({
+      ...settings,
+      [type]: value,
+    });
+  };
+
+  console.log("settings", settings);
+
   const handleSubmit = () => {
     if (isValidValues()) {
       handlePomodoroConfig({
         pomodoroMinutes: settings.pomodoroMinutes,
         shortBreakMinutes: settings.shortBreakMinutes,
+        autoStartPomodoro: settings.autoStartPomodoro,
+        autoStartBreaks: settings.autoStartBreaks,
       });
       onBack();
     }
@@ -58,6 +81,7 @@ const Settings = ({ onBack }: Props) => {
 
     return { ...errors };
   }, [settings]);
+
   const isValidValues = () => Object.values(formErrors).length === 0;
 
   return (
@@ -85,6 +109,35 @@ const Settings = ({ onBack }: Props) => {
             error={formErrors.shortBreakMinutes}
           />
         </S.InputContainer>
+        <S.SwitchContainer>
+          <S.SwitchLabel>Auto start Pomodoros ?</S.SwitchLabel>
+
+          <Switch
+            onChange={() =>
+              handleAutoStart(!settings.autoStartPomodoro, "autoStartPomodoro")
+            }
+            id="autoStartPomodoro"
+            checked={settings.autoStartPomodoro}
+            onColor="#090"
+            checkedIcon={true}
+            uncheckedIcon={false}
+          />
+        </S.SwitchContainer>
+
+        <S.SwitchContainer>
+          <S.SwitchLabel>Auto start Breaks ?</S.SwitchLabel>
+
+          <Switch
+            onChange={() =>
+              handleAutoStart(!settings.autoStartBreaks, "autoStartBreaks")
+            }
+            id="autoStartPomodoro"
+            checked={settings.autoStartBreaks}
+            onColor="#090"
+            checkedIcon={true}
+            uncheckedIcon={false}
+          />
+        </S.SwitchContainer>
 
         <S.ControlsContainer>
           <Button label="OK" type="submit" onClick={handleSubmit} />

@@ -15,24 +15,7 @@ export const Container = styled.div`
   height: 100%;
 `;
 
-export const ContainerTabs = styled.div`
-  margin: 16px 0px;
-`;
-
-export const ContainerControls = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px 0px;
-
-  
-`;
 
 export const TitlePage = styled.h1`
   margin: 8px;
-`;
-export const TextMode = styled.h2`
-  margin: 8px;
-  font-size: 16px;
-  font-weight: normal;
 `;

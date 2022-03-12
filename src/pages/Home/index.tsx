@@ -1,11 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { Helmet } from "react-helmet";
-import { IoSettingsSharp } from "react-icons/io5";
 import { ContainerPage } from "~/components/Layout";
-import Timer from "~/components/Timer";
-
+import Pomodoro from "./components/Pomodoro";
 import Settings from "./components/Settings";
-import Tabs from "~/components/Tabs";
 import Button from "~/components/Button";
 import { theme } from "~/styles/theme";
 import { useTimerContext, Mode } from "~/contexts/TimerContext";
@@ -39,6 +36,7 @@ const Home = () => {
         : theme.colors.pomodoroMode.break,
     [mode]
   );
+
   return (
     <ContainerPage backgroundColor={colorMode}>
       <Helmet>
@@ -49,30 +47,20 @@ const Home = () => {
         {showSettings ? (
           <Settings onBack={handleSettings} />
         ) : (
-          <>
-            <S.ContainerTabs>
-              <Tabs
-                tabs={[
-                  { label: "Pomodoro", component: null, value: Mode.POMODORO },
-                  { label: "Short Break", component: null, value: Mode.BREAK },
-                ]}
-                initialTabIndex={currentMode}
-                onChangeTab={handleMode}
-              />
-            </S.ContainerTabs>
-            <Timer
-              time={{
-                minutes,
-                seconds,
-              }}
-            />
-            <S.TextMode>{textMode}</S.TextMode>
-
-            <S.ContainerControls>
-              <Button label={buttonLabel} onClick={handleTimer} />
-              <IoSettingsSharp size={32} onClick={() => handleSettings()} />
-            </S.ContainerControls>
-          </>
+          <Pomodoro
+            minutes={minutes}
+            seconds={seconds}
+            handleMode={handleMode}
+            currentMode={currentMode}
+            tabs={[
+              { label: "Pomodoro", component: null, value: Mode.POMODORO },
+              { label: "Short Break", component: null, value: Mode.BREAK },
+            ]}
+            textMode={textMode}
+            handleTimer={handleTimer}
+            handleSettings={handleSettings}
+            buttonLabel={buttonLabel}
+          />
         )}
       </S.Container>
     </ContainerPage>

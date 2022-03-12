@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import * as S from "./styles";
 
 interface Props {
@@ -14,16 +14,14 @@ interface Props {
 const Tabs = ({ tabs, initialTabIndex = 0, onChangeTab }: Props) => {
   const [currentTabIndex, setCurrentTabIndex] =
     useState<number>(initialTabIndex);
+
   const currentComponent = useMemo(
     () => tabs[currentTabIndex].component,
     [currentTabIndex]
   );
 
-  const handleCurrentTabIndex = useCallback((newTabIndex: number) => {
-    setCurrentTabIndex(newTabIndex);
-  }, []);
   useEffect(() => {
-    handleCurrentTabIndex(initialTabIndex);
+    setCurrentTabIndex(initialTabIndex);
   }, [initialTabIndex]);
 
   return (
@@ -34,7 +32,6 @@ const Tabs = ({ tabs, initialTabIndex = 0, onChangeTab }: Props) => {
             key={index}
             currentTab={index === currentTabIndex}
             onClick={() => {
-              handleCurrentTabIndex(index);
               onChangeTab && onChangeTab(value);
             }}
           >

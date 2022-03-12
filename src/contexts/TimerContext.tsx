@@ -25,14 +25,18 @@ interface TimerContextProps {
   pomodoroConfig: PomodoroConfig;
 }
 
-const INITIAL_SHORT_BREAK_MINUTES = 1;
-const INITIAL_POMODORO_MINUTES = 2;
+const INITIAL_SHORT_BREAK_MINUTES = 30;
+const INITIAL_POMODORO_MINUTES = 5;
+const INITIAL_AUTO_START_POMODORO = true;
+const INITIAL_AUTO_START_BREAKS = true;
 
 const TimerContext = createContext({} as TimerContextProps);
 
-interface PomodoroConfig {
+export interface PomodoroConfig {
   pomodoroMinutes: number;
   shortBreakMinutes: number;
+  autoStartPomodoro: boolean;
+  autoStartBreaks: boolean;
 }
 
 const sounds = {
@@ -50,10 +54,13 @@ export const TimerContextProvider = ({ children }: Props) => {
   const [pomodoroConfig, setPomodoroConfig] = useLocalStorage<PomodoroConfig>(
     "pomodoroConfig",
     {
-      pomodoroMinutes: 10,
-      shortBreakMinutes: 20,
+      pomodoroMinutes: INITIAL_SHORT_BREAK_MINUTES,
+      shortBreakMinutes: INITIAL_POMODORO_MINUTES,
+      autoStartPomodoro: INITIAL_AUTO_START_POMODORO,
+      autoStartBreaks: INITIAL_AUTO_START_BREAKS,
     }
   );
+  console.log("pomodoroConfig", pomodoroConfig);
   const minutes = useMemo(() => {
     if (mode === Mode.POMODORO) {
       return pomodoroConfig.pomodoroMinutes;
@@ -85,6 +92,7 @@ export const TimerContextProvider = ({ children }: Props) => {
       newMode === Mode.POMODORO
         ? pomodoroConfig.pomodoroMinutes
         : pomodoroConfig.shortBreakMinutes;
+
     if (secondsLeft < minutes * 60 && secondsLeft > 0) {
       createAlertConfirm({
         title: "The timer is still running, are you sure you want to switch?",
@@ -111,22 +119,18 @@ export const TimerContextProvider = ({ children }: Props) => {
     setIsPaused(!isPaused);
   };
 
-  console.log("isPaused", isPaused);
-
-  const initConfig = () => {
-    if (isEmptyObj(pomodoroConfig)) {
-      setPomodoroConfig({
-        pomodoroMinutes: INITIAL_POMODORO_MINUTES,
-        shortBreakMinutes: INITIAL_SHORT_BREAK_MINUTES,
-      });
-    }
-  };
-
   const handlePomodoroConfig = (values: PomodoroConfig) => {
-    const { pomodoroMinutes, shortBreakMinutes } = values;
+    const {
+      pomodoroMinutes,
+      shortBreakMinutes,
+      autoStartPomodoro,
+      autoStartBreaks,
+    } = values;
     setPomodoroConfig({
       pomodoroMinutes,
       shortBreakMinutes,
+      autoStartPomodoro,
+      autoStartBreaks,
     });
     if (mode === Mode.POMODORO) {
       handleSecondsLeft(pomodoroMinutes);
@@ -134,10 +138,6 @@ export const TimerContextProvider = ({ children }: Props) => {
       handleSecondsLeft(shortBreakMinutes);
     }
   };
-
-  useEffect(() => {
-    initConfig();
-  }, []);
 
   useEffect(() => {
     handleSecondsLeft();

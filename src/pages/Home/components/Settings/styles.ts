@@ -29,3 +29,14 @@ export const ControlsContainer = styled.div`
 `;
 
 export const ContainerSettings = styled.div``;
+
+export const SwitchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0px;
+  justify-content: space-between;
+`;
+export const SwitchLabel = styled.h4`
+  margin: 0;
+`;
