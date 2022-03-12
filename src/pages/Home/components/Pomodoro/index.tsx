@@ -30,7 +30,7 @@ const Pomodoro = ({
   handleTimer,
 }: Props) => {
   return (
-    <>
+    <S.Container>
       <S.ContainerTabs>
         <Tabs
           tabs={tabs}
@@ -49,7 +49,7 @@ const Pomodoro = ({
         <Button label={buttonLabel} onClick={handleTimer} />
         <IoSettingsSharp size={32} onClick={() => handleSettings()} />
       </S.ContainerControls>
-    </>
+    </S.Container>
   );
 };
 export default Pomodoro;

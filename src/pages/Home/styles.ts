@@ -10,11 +10,16 @@ export const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  width: 50%;
   margin: auto;
   height: 100%;
-`;
+  width: 90%;
 
+
+  @media ${(props) => props.theme.breakpoints.xs} {
+    width: 90%;
+  }
+  
+`;
 
 export const TitlePage = styled.h1`
   margin: 8px;

@@ -16,6 +16,7 @@ export const Title = styled.h2``;
 export const InputContainer = styled.div`
   display: flex;
   gap: 16px;
+  flex-wrap:wrap;
 `;
 
 export const ControlsContainer = styled.div`

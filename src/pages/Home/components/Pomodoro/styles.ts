@@ -1,5 +1,9 @@
 import { styled } from "~/styles/theme";
 
+export const Container = styled.div`
+padding: 20px 8px;
+`;
+
 export const ContainerTabs = styled.div`
   margin: 16px 0px;
 `;
