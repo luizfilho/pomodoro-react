@@ -1,7 +1,7 @@
 import React from "react";
 import * as S from "./styles";
 
-interface Props extends React.InputHTMLAttributes<any> {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?:string
 }

@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import * as S from "./styles";
-interface Props extends React.ButtonHTMLAttributes<any> {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string | ReactNode;
 }
 
