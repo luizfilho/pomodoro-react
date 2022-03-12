@@ -3,7 +3,7 @@ import { styled } from "~/styles/theme";
 export const Timer = styled.div``;
 
 export const Container = styled.div`
-  padding: 48px;
+  padding: 42px;
   border-radius: 16px;
   width: auto;
   height: 160px;
