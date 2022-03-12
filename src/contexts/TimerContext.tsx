@@ -149,7 +149,7 @@ export const TimerContextProvider = ({ children }: Props) => {
     } else {
       const timeoutId = setTimeout(() => {
         increaseSeconds();
-      }, 100);
+      }, 1000);
 
       return () => {
         clearTimeout(timeoutId);
