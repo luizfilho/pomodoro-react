@@ -1,7 +1,10 @@
 import { styled } from "~/styles/theme";
 
 export const Container = styled.div`
-padding: 20px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 8px;
 `;
 
 export const ContainerTabs = styled.div`
