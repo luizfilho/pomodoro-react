@@ -46,16 +46,11 @@ const Settings = ({ onBack }: Props) => {
     value: boolean,
     type: "autoStartPomodoro" | "autoStartBreaks"
   ) => {
-    console.log("value", value);
-    console.log("type", typeof type);
-
     setSettings({
       ...settings,
       [type]: value,
     });
   };
-
-  console.log("settings", settings);
 
   const handleSubmit = () => {
     if (isValidValues()) {

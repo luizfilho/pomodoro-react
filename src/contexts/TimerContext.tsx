@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { useState, useEffect, useContext, createContext, useRef } from "react";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { useAlert } from "~/hooks/useAlert";
-import isEmptyObj from "~/utils/isEmptyObj";
 
 export enum Mode {
   POMODORO = "POMODORO",
@@ -80,14 +79,16 @@ export const TimerContextProvider = ({ children }: Props) => {
   const handleCurrentModeTimer = () => {
     if (mode === Mode.POMODORO) {
       handleMode(Mode.BREAK);
+      !pomodoroConfig.autoStartBreaks && handleTimer();
       sounds.pomodoro.play();
     } else {
+      !pomodoroConfig.autoStartPomodoro && handleTimer();
       handleMode(Mode.POMODORO);
       sounds.shortBreak.play();
     }
   };
 
-  const handleMode = (newMode: Mode) => {
+  const handleMode = (newMode: Mode, setNewMinutes?: true) => {
     const newMinutes =
       newMode === Mode.POMODORO
         ? pomodoroConfig.pomodoroMinutes

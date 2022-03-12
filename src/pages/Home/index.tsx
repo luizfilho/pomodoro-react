@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet";
 import { ContainerPage } from "~/components/Layout";
 import Pomodoro from "./components/Pomodoro";
 import Settings from "./components/Settings";
-import Button from "~/components/Button";
 import { theme } from "~/styles/theme";
 import { useTimerContext, Mode } from "~/contexts/TimerContext";
 import * as S from "./styles";
