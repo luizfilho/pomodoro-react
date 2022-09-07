@@ -3,8 +3,7 @@
   "short_name": "flow",
   "theme_color": "#000000",
   "background_color": "#000000",
-  "display": "standalone",
-  "scope": "/",
+  "display": "fullscreen",
   "start_url": "/",
   "icons": [
     {
@@ -26,6 +25,11 @@
     {
       "src": "logo384.png",
       "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "logo512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
